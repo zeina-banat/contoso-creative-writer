@@ -115,7 +115,7 @@ jobs:
 
       - name: Run AI Evaluation
         id: run-ai-evaluation
-        uses: microsoft/genai-evals@main
+        uses: microsoft/genai-evals@users/daviwu/ignite2024
         with:          
           evaluate-configuration: ${{ env.EVAL_CONFIG_FILE_PATH }}
           show-summary: true
