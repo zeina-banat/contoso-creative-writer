@@ -68,32 +68,32 @@ jobs:
           inlineScript: |
             az account set --subscription ${{env.AZURE_SUBSCRIPTION_ID}}
 
-      - name: evaluate orchestrator
-        working-directory: ./src/api
-        run: |
-          python -m evaluate.evaluate
+      # - name: evaluate orchestrator
+      #   working-directory: ./src/api
+      #   run: |
+      #     python -m evaluate.evaluate
       
-      - name: Upload eval results as build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: eval_result
-          path: ./src/api/evaluate/eval_results.jsonl
+      # - name: Upload eval results as build artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: eval_result
+      #     path: ./src/api/evaluate/eval_results.jsonl
         
-      - name: Upload image eval results as build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: eval_image_result
-          path: ./src/api/evaluate/image_eval_results.jsonl
+      # - name: Upload image eval results as build artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: eval_image_result
+      #     path: ./src/api/evaluate/image_eval_results.jsonl
 
-      - name: GitHub Summary Step
-        if: ${{ success() }}
-        working-directory: ./src/api
-        run: |
-          echo "" >> $GITHUB_STEP_SUMMARY
+      # - name: GitHub Summary Step
+      #   if: ${{ success() }}
+      #   working-directory: ./src/api
+      #   run: |
+      #     echo "" >> $GITHUB_STEP_SUMMARY
 
-          echo "📊 Evaluation Results" >> $GITHUB_STEP_SUMMARY
-          cat evaluate/eval_results.md >> $GITHUB_STEP_SUMMARY
-          cat evaluate/image_eval_results.md >> $GITHUB_STEP_SUMMARY
+      #     echo "📊 Evaluation Results" >> $GITHUB_STEP_SUMMARY
+      #     cat evaluate/eval_results.md >> $GITHUB_STEP_SUMMARY
+      #     cat evaluate/image_eval_results.md >> $GITHUB_STEP_SUMMARY
         
       - name: Prepare AI evaluation configuration file
         run: |
