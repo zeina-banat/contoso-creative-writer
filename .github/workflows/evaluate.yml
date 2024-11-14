@@ -35,6 +35,8 @@ jobs:
       AZURE_OPENAI_NAME: ${{ vars.AZURE_OPENAI_NAME }}
       BING_SEARCH_ENDPOINT: ${{ vars.BING_SEARCH_ENDPOINT }}
       BING_SEARCH_KEY: ${{ secrets.BING_SEARCH_KEY }}
+      EVAL_INPUT_FILE_PATH: ${{ github.workspace }}/src/api/evaluate/eval_data.jsonl
+      EVAL_CONFIG_FILE_PATH: ${{ github.workspace }}/evaluate-config.json
 
     steps:
       - name: checkout repo content
@@ -93,3 +95,28 @@ jobs:
           cat evaluate/eval_results.md >> $GITHUB_STEP_SUMMARY
           cat evaluate/image_eval_results.md >> $GITHUB_STEP_SUMMARY
         
+      - name: Prepare AI evaluation configuration file
+        run: |
+          cat > ${{ env.EVAL_CONFIG_FILE_PATH }}<<EOF
+          {
+            "data": "${{ env.EVAL_INPUT_FILE_PATH }}",
+            "evaluators": {
+              "coherence": "CoherenceEvaluator",
+              "fluency": "FluencyEvaluator"
+            },
+            "ai_model_configuration": {
+              "type": "azure_openai",
+              "azure_endpoint": "${{ vars.AZURE_OPENAI_ENDPOINT }}",
+              "azure_deployment": "${{ vars.AZURE_OPENAI_DEPLOYMENT_NAME }}",
+              "api_version": "${{ vars.AZURE_OPENAI_API_VERSION }}"
+            }
+          }
+          EOF
+
+      - name: Run AI Evaluation
+        id: run-ai-evaluation
+        uses: microsoft/genai-evals@main
+        with:          
+          evaluate-configuration: ${{ env.EVAL_CONFIG_FILE_PATH }}
+          show-summary: true
+          show-raw-output: true
