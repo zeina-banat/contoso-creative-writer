@@ -13,6 +13,7 @@ model:
     api_version: 2023-07-01-preview
 sample:
   instructions: Can you generate queries to find the latest winter camping trends? Use 'en-US' as the market code. 
+  lang: french
 ---
 system:
 # Researcher Agent
@@ -44,6 +45,8 @@ Spanish,	es-ES
 Swedish,	sv-SE
 Turkish,	tr-TR
 English,	en-US
+
+Generate the answer in {{lang}}.
 
 user:
 {{instructions}}
